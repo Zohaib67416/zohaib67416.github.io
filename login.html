@@ -62,6 +62,35 @@ a{
 
 <button onclick="window.location.href='signup.html'">Sign Up</button>
 </div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "zohaib-mining.firebaseapp.com",
+  projectId: "zohaib-mining",
+  storageBucket: "zohaib-mining.firebasestorage.app",
+  messagingSenderId: "349772987051",
+  appId: "1:349772987051:web:abab3ec726d95a74eb15ee"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+document.getElementById("loginBtn").addEventListener("click", () => {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  signInWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      alert("Login Successful!");
+      window.location.href = "dashboard.html";
+    })
+    .catch((error) => {
+      alert(error.message);
+    });
+});
+</script>
 </body>
 </html>
