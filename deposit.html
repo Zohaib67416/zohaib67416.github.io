@@ -1,59 +1,87 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Deposit</title>
+<title>Deposit - Zohaib Mining</title>
 
 <style>
 body{
-background:#1b102d;
-font-family:Arial;
-color:white;
-text-align:center;
-margin:0;
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#1b102d;
+    color:white;
+    text-align:center;
 }
-.box{
-background:#2a1845;
-margin:20px;
-padding:20px;
-border-radius:10px;
+.header{
+    background:#b84dff;
+    padding:20px;
+    font-size:24px;
+    font-weight:bold;
 }
-input,select{
-width:90%;
-padding:12px;
-margin:10px;
-border:none;
-border-radius:6px;
+.card{
+    background:#2a1845;
+    margin:20px;
+    padding:20px;
+    border-radius:12px;
 }
 button{
-width:90%;
-padding:15px;
-background:#b84dff;
-color:white;
-border:none;
-border-radius:6px;
-font-size:18px;
+    width:90%;
+    padding:15px;
+    margin-top:15px;
+    font-size:18px;
+    background:#b84dff;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+input{
+    width:90%;
+    padding:12px;
+    border-radius:8px;
+    border:none;
+    margin-top:10px;
 }
 </style>
 </head>
 
 <body>
 
-<h2>Deposit</h2>
-
-<div class="box">
-<select>
-<option>JazzCash</option>
-<option>EasyPaisa</option>
-<option>Binance</option>
-</select>
-
-<input type="number" placeholder="Enter Amount">
-
-<button>Submit Deposit</button>
-
+<div class="header">
+💳 Deposit
 </div>
+
+<div class="card">
+<h2>JazzCash Deposit</h2>
+
+<p><b>Account Holder:</b></p>
+<p>Muhammad Zohaib</p>
+
+<p><b>Account Number:</b></p>
+<p id="number">03183807372</p>
+
+<button onclick="copyNumber()">📋 Copy Account Number</button>
+</div>
+
+<div class="card">
+<h3>Upload Payment Screenshot</h3>
+
+<input type="file">
+
+<button onclick="paid()">✅ I Have Paid</button>
+</div>
+
+<script>
+function copyNumber(){
+navigator.clipboard.writeText("03183807372");
+alert("Account Number Copied!");
+}
+
+function paid(){
+alert("Your payment request has been submitted.");
+}
+</script>
 
 </body>
 </html>
