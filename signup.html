@@ -66,6 +66,41 @@ a{
 <a href="login.html">Login</a>
 
 </div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyBL23qVtMr9EdV4qhdXB8DJ9xzWnKQfRU0",
+  authDomain: "zohaib-mining.firebaseapp.com",
+  projectId: "zohaib-mining",
+  storageBucket: "zohaib-mining.firebasestorage.app",
+  messagingSenderId: "349772987051",
+  appId: "1:349772987051:web:abab3ec726d95a74eb15ee"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+document.getElementById("signupBtn").addEventListener("click", () => {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
+
+  if (password !== confirmPassword) {
+    alert("Passwords do not match!");
+    return;
+  }
+
+  createUserWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      alert("Account Created Successfully!");
+      window.location.href = "login.html";
+    })
+    .catch((error) => {
+      alert(error.message);
+    });
+});
+</script>
 </body>
 </html>
