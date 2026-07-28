@@ -1,1 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel</title>
 
+<style>
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#1b102d;
+    color:white;
+}
+.header{
+    background:#2a1845;
+    padding:15px;
+    text-align:center;
+}
+.card{
+    background:#2a1845;
+    margin:20px;
+    padding:20px;
+    border-radius:10px;
+}
+button{
+    padding:10px 20px;
+    background:#b84dff;
+    color:white;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<h2>Admin Panel</h2>
+</div>
+
+<div class="card">
+<h3>Total Users</h3>
+<p id="totalUsers">Loading...</p>
+</div>
+
+<div class="card">
+<h3>Admin Controls</h3>
+<button>View Users</button>
+<button>Logout</button>
+</div>
+
+</body>
+</html>
