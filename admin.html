@@ -78,8 +78,8 @@ onAuthStateChanged(auth, async (user) => {
     window.location.href = "index.html";
     return;
   }
-onAuthStateChanged(auth, (user) => {
-  if (!user) {
+onAuthStateChanged(auth, async (user) => {
+  
     alert("Please login first!");
     window.location.href = "login.html";
     return;
