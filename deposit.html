@@ -73,14 +73,40 @@ input{
 </div>
 
 <script type="module">
-function copyNumber(){
-navigator.clipboard.writeText("03183807372");
-alert("Account Number Copied!");
-}
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-function paid(){
-alert("Your payment request has been submitted.");
-}
+const firebaseConfig = {
+  apiKey: "AIzaSyBL23qVtMr9EdV4qhdXB8DJ9xzWnKQfRU0",
+  authDomain: "zohaib-mining.firebaseapp.com",
+  projectId: "zohaib-mining",
+  storageBucket: "zohaib-mining.firebasestorage.app",
+  messagingSenderId: "349772987051",
+  appId: "1:349772987051:web:abab3ec726d95a74eb15ee"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+window.copyNumber = function () {
+  navigator.clipboard.writeText("03183807372");
+  alert("Account Number Copied!");
+};
+
+window.paid = async function () {
+  try {
+    await addDoc(collection(db, "deposits"), {
+      status: "Pending",
+      createdAt: new Date()
+    });
+
+    alert("Deposit request submitted successfully!");
+  } catch (e) {
+    alert("Error: " + e.message);
+  }
+};
 </script>
 <div class="deposit-card">
     <h2>EasyPaisa Deposit</h2>
