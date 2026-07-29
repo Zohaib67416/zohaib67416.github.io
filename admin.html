@@ -54,6 +54,7 @@ button{
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyBL23qVtMr9EdV4qhdXB8DJ9xzWnKQfRU0",
   authDomain: "zohaib-mining.firebaseapp.com",
@@ -66,6 +67,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     alert("Please login first!");
@@ -78,23 +80,13 @@ onAuthStateChanged(auth, async (user) => {
     window.location.href = "index.html";
     return;
   }
-onAuthStateChanged(auth, async (user) => {
-  
-    alert("Please login first!");
-    window.location.href = "login.html";
-    return;
-  }
 
-  if (user.email !== "zabbirajpoot46@gmail.com") {
-    alert("Access Denied!");
-    window.location.href = "index.html";
-    return;
-  }
-
-  const snapshot = await getDocs(collection(db, "deposits"));
-document.getElementById("totalUsers").innerText = snapshot.size;
-
-  
+  try {
+    const snapshot = await getDocs(collection(db, "deposits"));
+    document.getElementById("totalUsers").innerText = snapshot.size;
+  } catch (e) {
+    document.getElementById("totalUsers").innerText = "0";
+    console.log(e);
   }
 });
 
@@ -103,6 +95,20 @@ document.querySelectorAll("button")[1].addEventListener("click", () => {
     window.location.href = "login.html";
   });
 });
+
+document.querySelectorAll("button")[0].addEventListener("click", async () => {
+  const snapshot = await getDocs(collection(db, "deposits"));
+
+  let text = "";
+  snapshot.forEach((doc) => {
+    const data = doc.data();
+    text += `Email: ${data.email || "Unknown"}\nStatus: ${data.status}\n\n`;
+  });
+
+  if (text === "") text = "No deposits found.";
+
+  alert(text);
+});
 </script>
-</body>
-</html>
+
+
