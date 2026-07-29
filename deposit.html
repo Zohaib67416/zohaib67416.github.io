@@ -97,12 +97,13 @@ window.copyNumber = function () {
 
 window.paid = async function () {
   try {
-    await addDoc(collection(db, "deposits"), {
-      status: "Pending",
-      createdAt: new Date()
-    });
-
-    alert("Deposit request submitted successfully!");
+       await addDoc(collection(db, "deposits"), {
+  email: auth.currentUser.email,
+  status: "Pending",
+  amount: 0,
+  method: "JazzCash",
+  createdAt: new Date()
+}); alert("Deposit request submitted successfully!");
   } catch (e) {
     alert("Error: " + e.message);
   }
