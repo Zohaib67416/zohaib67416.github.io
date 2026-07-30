@@ -1,1 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deposit Requests</title>
+<style>
+body{
+  background:#1b102d;
+  color:white;
+  font-family:Arial;
+  padding:20px;
+}
+.card{
+  background:#2a1845;
+  padding:15px;
+  margin:10px 0;
+  border-radius:10px;
+}
+</style>
+</head>
+<body>
 
+<h2>Deposit Requests</h2>
+
+<div id="list">Loading...</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBL23qVtMr9EdV4qhdXB8DJ9xzWnKQfRU0",
+  authDomain: "zohaib-mining.firebaseapp.com",
+  projectId: "zohaib-mining",
+  storageBucket: "zohaib-mining.firebasestorage.app",
+  messagingSenderId: "349772987051",
+  appId: "1:349772987051:web:abab3ec726d95a74eb15ee"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    alert("Please login first!");
+    window.location.href = "login.html";
+    return;
+  }
+
+  const snapshot = await getDocs(collection(db, "deposits"));
+  let html = "";
+
+  snapshot.forEach(doc => {
+    const d = doc.data();
+    html += `
+      <div class="card">
+        <b>Email:</b> ${d.email || "Unknown"}<br>
+        <b>Method:</b> ${d.method || ""}<br>
+        <b>Status:</b> ${d.status || ""}
+      </div>
+    `;
+  });
+
+  if (html === "") html = "No Deposit Requests";
+  document.getElementById("list").innerHTML = html;
+});
+</script>
+
+</body>
+</html>
