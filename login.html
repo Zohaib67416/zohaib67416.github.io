@@ -85,7 +85,7 @@ document.getElementById("loginBtn").addEventListener("click", () => {
   signInWithEmailAndPassword(auth, email, password)
     .then(() => {
       alert("Login Successful!");
-      window.location.href = "dashboard.html";
+      window.location.href = "admin.html";
     })
     .catch((error) => {
       alert(error.message);
