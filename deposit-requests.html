@@ -50,7 +50,7 @@ onAuthStateChanged(auth, async (user) => {
     return;
   }
 
-  const snapshot = await getDocs(collection(db, "deposits"));
+  document.getElementById("list").innerHTML = "Page Loaded Successfully";
   let html = "";
 
   snapshot.forEach(doc => {
