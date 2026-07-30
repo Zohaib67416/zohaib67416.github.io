@@ -46,9 +46,18 @@ button{
 </div>
 
 <div class="card">
-<h3>Admin Controls</h3>
-<button>View Users</button>
-<button>Logout</button>
+<h3>Admin Menu</h3>
+
+<button onclick="location.href='users.html'">👥 View Users</button><br><br>
+
+<button onclick="location.href='deposit-requests.html'">💳 Deposit Requests</button><br><br>
+
+<button onclick="location.href='withdraw-requests.html'">💸 Withdrawal Requests</button><br><br>
+
+<button onclick="location.href='blocked-users.html'">🚫 Blocked Users</button><br><br>
+
+<button id="logoutBtn">🚪 Logout</button>
+
 </div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
