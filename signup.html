@@ -1,5 +1,4 @@
-
-<!DOCTYPE html>
+l<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -32,6 +31,7 @@ input{
     margin:10px 0;
     border:none;
     border-radius:6px;
+    box-sizing:border-box;
 }
 button{
     width:100%;
@@ -55,10 +55,10 @@ a{
 <div class="box">
 <h2>Create Account</h2>
 
-<inp<input type="text" id="name" placeholder="Full Name">
+<input type="text" id="name" placeholder="Full Name">
 <input type="email" id="email" placeholder="Email">
 <input type="password" id="password" placeholder="Password">
-<input type="password" id="confirmPassword" placeholder="Confirm Password"> 
+<input type="password" id="confirmPassword" placeholder="Confirm Password">
 
 <button id="signupBtn">Create Account</button>
 
@@ -66,9 +66,21 @@ a{
 <a href="login.html">Login</a>
 
 </div>
+
 <script type="module">
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+import {
+  getAuth,
+  createUserWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  doc,
+  setDoc
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBL23qVtMr9EdV4qhdXB8DJ9xzWnKQfRU0",
@@ -81,26 +93,50 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
-document.getElementById("signupBtn").addEventListener("click", () => {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  const confirmPassword = document.getElementById("confirmPassword").value;
+document.getElementById("signupBtn").addEventListener("click", async () => {
 
-  if (password !== confirmPassword) {
-    alert("Passwords do not match!");
-    return;
-  }
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
 
-  createUserWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      alert("Account Created Successfully!");
-      window.location.href = "login.html";
-    })
-    .catch((error) => {
-      alert(error.message);
-    });
+    if(password !== confirmPassword){
+        alert("Passwords do not match!");
+        return;
+    }
+
+    try{
+
+        const userCredential = await createUserWithEmailAndPassword(auth,email,password);
+
+        const user = userCredential.user;
+
+        await setDoc(doc(db,"users",user.uid),{
+
+            uid:user.uid,
+            name:name,
+            email:email,
+            role:"User",
+            balance:0,
+            blocked:false,
+            createdAt:new Date().toISOString()
+
+        });
+
+        alert("Account Created Successfully!");
+        window.location.href="login.html";
+
+    }catch(error){
+
+        alert(error.message);
+
+    }
+
 });
+
 </script>
+
 </body>
 </html>
