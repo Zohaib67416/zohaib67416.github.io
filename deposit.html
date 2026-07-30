@@ -89,14 +89,41 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    alert("Please login first!");
+    window.location.href = "login.html";
+  }
+});
 window.copyNumber = function () {
   navigator.clipboard.writeText("03183807372");
   alert("Account Number Copied!");
 };
 
 window.paid = async function () {
+
+  if (!auth.currentUser) {
+    alert("Please login first!");
+    return;
+  }
+
   try {
+    await addDoc(collection(db, "deposits"), {
+      email: auth.currentUser.email,
+      status: "Pending",
+      amount: 0,
+      method: "JazzCash",
+      createdAt: new Date()
+    });
+
+    alert("Deposit request submitted successfully!");
+
+  } catch (e) {
+    alert("Error: " + e.message);
+  }
+};
        await addDoc(collection(db, "deposits"), {
   email: auth.currentUser.email,
   status: "Pending",
