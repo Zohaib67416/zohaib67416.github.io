@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,29 +7,43 @@
 
 <style>
 body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:#1b102d;
-    color:white;
+margin:0;
+background:#1b102d;
+font-family:Arial,sans-serif;
+color:#fff;
 }
+
 .header{
-    background:#2a1845;
-    padding:15px;
-    text-align:center;
+background:#2a1845;
+padding:18px;
+text-align:center;
+font-size:22px;
+font-weight:bold;
 }
+
 .card{
-    background:#2a1845;
-    margin:20px;
-    padding:20px;
-    border-radius:10px;
+background:#2a1845;
+margin:20px;
+padding:20px;
+border-radius:10px;
 }
+
 button{
-    padding:10px 20px;
-    background:#b84dff;
-    color:white;
-    border:none;
-    border-radius:5px;
-    cursor:pointer;
+width:100%;
+padding:12px;
+margin-top:10px;
+background:#b84dff;
+color:#fff;
+border:none;
+border-radius:6px;
+font-size:16px;
+cursor:pointer;
+}
+
+#totalUsers{
+font-size:22px;
+font-weight:bold;
+color:#b84dff;
 }
 </style>
 </head>
@@ -37,7 +51,7 @@ button{
 <body>
 
 <div class="header">
-<h2>Admin Panel</h2>
+Zohaib Mining Admin Panel
 </div>
 
 <div class="card">
@@ -46,60 +60,14 @@ button{
 </div>
 
 <div class="card">
-<h3>Admin Menu</h3>
-
-<button onclick="location.href='users.html'">👥 View Users</button><br><br>
-
-<button onclick="location.href='deposit-requests.html'">💳 Deposit Requests</button><br><br>
-
-<button onclick="location.href='withdraw-requests.html'">💸 Withdrawal Requests</button><br><br>
-
-<button onclick="location.href='blocked-users.html'">🚫 Blocked Users</button><br><br>
-
+<button id="usersBtn">👥 View Users</button>
+<button id="depositBtn">💳 Deposit Requests</button>
+<button id="withdrawBtn">💸 Withdrawal Requests</button>
+<button id="blockedBtn">🚫 Blocked Users</button>
 <button id="logoutBtn">🚪 Logout</button>
-
 </div>
+
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBL23qVtMr9EdV4qhdXB8DJ9xzWnKQfRU0",
-  authDomain: "zohaib-mining.firebaseapp.com",
-  projectId: "zohaib-mining",
-  storageBucket: "zohaib-mining.firebasestorage.app",
-  messagingSenderId: "349772987051",
-  appId: "1:349772987051:web:abab3ec726d95a74eb15ee"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    alert("Please login first!");
-    window.location.href = "login.html";
-    return;
-  }
-
-  if (user.email !== "zabbirajpoot46@gmail.com") {
-    alert("Access Denied!");
-    window.location.href = "index.html";
-    return;
-  }
-
-  try {
-    const snapshot = await getDocs(collection(db, "deposits"));
-    document.getElementById("totalUsers").innerText = snapshot.size;
-  }").innerText = "0";
-    console.log(e);
-  }
-});
-
-document.querySelectorAll
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 
 import {
@@ -120,9 +88,14 @@ const firebaseConfig = {
   projectId: "zohaib-mining",
   storageBucket: "zohaib-mining.firebasestorage.app",
   messagingSenderId: "349772987051",
-  appId: "1:349772987051:web:abab3ec726d95a74eb15
+  appId: "1:349772987051:web:abab3ec726d95a74eb15ee"
+};
 
-onAuthStateChanged(auth, async (user) => {
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+   onAuthStateChanged(auth, async (user) => {
 
   if (!user) {
     alert("Please login first!");
@@ -138,21 +111,14 @@ onAuthStateChanged(auth, async (user) => {
   }
 
   try {
-
-    // Total registered users
     const usersSnapshot = await getDocs(collection(db, "users"));
     document.getElementById("totalUsers").innerText = usersSnapshot.size;
-
   } catch (error) {
-
     console.log(error);
     document.getElementById("totalUsers").innerText = "0";
-
   }
 
 });
-
-// Menu Buttons
 
 document.getElementById("usersBtn").onclick = () => {
   window.location.href = "users.html";
@@ -167,8 +133,9 @@ document.getElementById("withdrawBtn").onclick = () => {
 };
 
 document.getElementById("blockedBtn").onclick = () => {
-  window.location
-    document.getElementById("logoutBtn").addEventListener("click", async () => {
+  window.location.href = "blocked-users.html";
+}; 
+   document.getElementById("logoutBtn").addEventListener("click", async () => {
   try {
     await signOut(auth);
     alert("Logged out successfully!");
@@ -181,4 +148,4 @@ document.getElementById("blockedBtn").onclick = () => {
 </script>
 
 </body>
-</html>
+</html> 
