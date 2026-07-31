@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,43 +7,42 @@
 
 <style>
 body{
-    margin:0;
-    background:#1b102d;
-    font-family:Arial,sans-serif;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
+margin:0;
+background:#1b102d;
+font-family:Arial,sans-serif;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
 }
 .box{
-    background:#2a1845;
-    padding:30px;
-    border-radius:10px;
-    width:300px;
-    text-align:center;
+background:#2a1845;
+padding:30px;
+border-radius:10px;
+width:320px;
+text-align:center;
 }
 h2{
-    color:#b84dff;
+color:#b84dff;
 }
 input{
-    width:100%;
-    padding:12px;
-    margin:10px 0;
-    border:none;
-    border-radius:5px;
+width:100%;
+padding:12px;
+margin:10px 0;
+border:none;
+border-radius:6px;
+box-sizing:border-box;
 }
 button{
-    width:100%;
-    padding:12px;
-    background:#b84dff;
-    color:white;
-    border:none;
-    border-radius:5px;
-    font-size:16px;
-}
-a{
-    color:#b84dff;
-    text-decoration:none;
+width:100%;
+padding:12px;
+background:#b84dff;
+color:#fff;
+border:none;
+border-radius:6px;
+font-size:16px;
+cursor:pointer;
+margin-top:10px;
 }
 </style>
 </head>
@@ -61,17 +60,23 @@ a{
 <p>Don't have an account?</p>
 
 <button onclick="window.location.href='signup.html'">Sign Up</button>
+
 </div>
-<script type="module"
-import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+<script type="module">
+import {
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+
 import {
   getAuth,
   signInWithEmailAndPassword,
   setPersistence,
   browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
 const firebaseConfig = {
-apiKey: "AIzaSyBL23qVtMr9EdV4qhdXB8DJ9xzWnKQfRU0",
+  apiKey: "AIzaSyBL23qVtMr9EdV4qhdXB8DJ9xzWnKQfRU0",
   authDomain: "zohaib-mining.firebaseapp.com",
   projectId: "zohaib-mining",
   storageBucket: "zohaib-mining.firebasestorage.app",
@@ -81,12 +86,18 @@ apiKey: "AIzaSyBL23qVtMr9EdV4qhdXB8DJ9xzWnKQfRU0",
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+    document.getElementById("loginBtn").addEventListener("click", async () => {
 
-document.getElementById("loginBtn").addEventListener("click", async () => {
-  const email = document.getElementById("email").value;
+  const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
 
+  if (!email || !password) {
+    alert("Please enter email and password!");
+    return;
+  }
+
   try {
+
     await setPersistence(auth, browserLocalPersistence);
 
     await signInWithEmailAndPassword(auth, email, password);
@@ -96,18 +107,13 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
     window.location.href = "admin.html";
 
   } catch (error) {
+
     alert(error.message);
+
   }
+
 });
-  signInWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      alert("Login Successful!");
-      window.location.href = "admin.html";
-    })
-    .catch((error) => {
-      alert(error.message);
-    });
-});
-</script>
+    </script>
+
 </body>
 </html>
