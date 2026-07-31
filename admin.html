@@ -93,31 +93,92 @@ onAuthStateChanged(auth, async (user) => {
   try {
     const snapshot = await getDocs(collection(db, "deposits"));
     document.getElementById("totalUsers").innerText = snapshot.size;
-  } catch (e) {
-    document.getElementById("totalUsers").innerText = "0";
+  }").innerText = "0";
     console.log(e);
   }
 });
 
-document.querySelectorAll("button")[1].addEventListener("click", () => {
-  signOut(auth).then(() => {
+document.querySelectorAll
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+
+import {
+  getAuth,
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  collection,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBL23qVtMr9EdV4qhdXB8DJ9xzWnKQfRU0",
+  authDomain: "zohaib-mining.firebaseapp.com",
+  projectId: "zohaib-mining",
+  storageBucket: "zohaib-mining.firebasestorage.app",
+  messagingSenderId: "349772987051",
+  appId: "1:349772987051:web:abab3ec726d95a74eb15
+
+onAuthStateChanged(auth, async (user) => {
+
+  if (!user) {
+    alert("Please login first!");
     window.location.href = "login.html";
-  });
+    return;
+  }
+
+  // Sirf admin email ko access do
+  if (user.email !== "zabbirajpoot46@gmail.com") {
+    alert("Access Denied!");
+    window.location.href = "index.html";
+    return;
+  }
+
+  try {
+
+    // Total registered users
+    const usersSnapshot = await getDocs(collection(db, "users"));
+    document.getElementById("totalUsers").innerText = usersSnapshot.size;
+
+  } catch (error) {
+
+    console.log(error);
+    document.getElementById("totalUsers").innerText = "0";
+
+  }
+
 });
 
-document.querySelectorAll("button")[0].addEventListener("click", async () => {
-  const snapshot = await getDocs(collection(db, "deposits"));
+// Menu Buttons
 
-  let text = "";
-  snapshot.forEach((doc) => {
-    const data = doc.data();
-    text += `Email: ${data.email || "Unknown"}\nStatus: ${data.status}\n\n`;
-  });
+document.getElementById("usersBtn").onclick = () => {
+  window.location.href = "users.html";
+};
 
-  if (text === "") text = "No deposits found.";
+document.getElementById("depositBtn").onclick = () => {
+  window.location.href = "deposit-requests.html";
+};
 
-  alert(text);
+document.getElementById("withdrawBtn").onclick = () => {
+  window.location.href = "withdraw-requests.html";
+};
+
+document.getElementById("blockedBtn").onclick = () => {
+  window.location
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+  try {
+    await signOut(auth);
+    alert("Logged out successfully!");
+    window.location.href = "login.html";
+  } catch (error) {
+    alert(error.message);
+  }
 });
+
 </script>
 
-
+</body>
+</html>
