@@ -1,80 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Deposit - Zohaib Mining</title>
-
-<style>
-body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:#1b102d;
-    color:white;
-    text-align:center;
-}
-.header{
-    background:#b84dff;
-    padding:20px;
-    font-size:24px;
-    font-weight:bold;
-}
-.card{
-    background:#2a1845;
-    margin:20px;
-    padding:20px;
-    border-radius:12px;
-}
-button{
-    width:90%;
-    padding:15px;
-    margin-top:15px;
-    font-size:18px;
-    background:#b84dff;
-    color:white;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-}
-input{
-    width:90%;
-    padding:12px;
-    border-radius:8px;
-    border:none;
-    margin-top:10px;
-}
-</style>
-</head>
-
-<body>
-
-<div class="header">
-💳 Deposit
-</div>
-
-<div class="card">
-<h2>JazzCash Deposit</h2>
-
-<p><b>Account Holder:</b></p>
-<p>Muhammad Zohaib</p>
-
-<p><b>Account Number:</b></p>
-<p id="number">03183807372</p>
-
-<button onclick="copyNumber()">📋 Copy Account Number</button>
-</div>
-
-<div class="card">
-<h3>Upload Payment Screenshot</h3>
-
-<input type="file">
-
-<button onclick="paid()">✅ I Have Paid</button>
-</div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -89,7 +16,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
 onAuthStateChanged(auth, (user) => {
   if (!user) {
@@ -97,6 +23,7 @@ onAuthStateChanged(auth, (user) => {
     window.location.href = "login.html";
   }
 });
+
 window.copyNumber = function () {
   navigator.clipboard.writeText("03183807372");
   alert("Account Number Copied!");
@@ -124,30 +51,4 @@ window.paid = async function () {
     alert("Error: " + e.message);
   }
 };
-       await addDoc(collection(db, "deposits"), {
-  email: auth.currentUser.email,
-  status: "Pending",
-  amount: 0,
-  method: "JazzCash",
-  createdAt: new Date()
-}); alert("Deposit request submitted successfully!");
-  } catch (e) {
-    alert("Error: " + e.message);
-  }
-};
 </script>
-<div class="deposit-card">
-    <h2>EasyPaisa Deposit</h2>
-
-    <h3>Account Holder:</h3>
-    <p>Hira Abid</p>
-
-    <h3>Account Number:</h3>
-    <p>03049217523</p>
-
-    <button onclick="navigator.clipboard.writeText('03049217523')">
-        📋 Copy Account Number
-    </button>
-</div>
-</body>
-</html>
