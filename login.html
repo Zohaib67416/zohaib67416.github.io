@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,219 +7,231 @@
 <title>Login - Zohaib Mining</title>
 
 <style>
+*{
+    box-sizing:border-box;
+}
 
 body{
-margin:0;
-background:#1b102d;
-font-family:Arial,sans-serif;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
+    margin:0;
+    background:#1b102d;
+    font-family:Arial,sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
 }
 
 .box{
-background:#2a1845;
-padding:30px;
-border-radius:10px;
-width:320px;
-text-align:center;
+    background:#2a1845;
+    padding:30px;
+    border-radius:10px;
+    width:320px;
+    text-align:center;
 }
 
 h2{
-color:#b84dff;
+    color:#b84dff;
+    margin-bottom:20px;
 }
 
 input{
-width:100%;
-padding:12px;
-margin:10px 0;
-border:none;
-border-radius:6px;
-box-sizing:border-box;
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border:none;
+    border-radius:6px;
+    outline:none;
 }
 
 button{
-width:100%;
-padding:12px;
-background:#b84dff;
-color:#fff;
-border:none;
-border-radius:6px;
-font-size:16px;
-cursor:pointer;
-margin-top:10px;
+    width:100%;
+    padding:12px;
+    background:#b84dff;
+    color:white;
+    border:none;
+    border-radius:6px;
+    font-size:16px;
+    cursor:pointer;
+    margin-top:10px;
 }
 
-button:hover{
-background:#9d35df;
+button:disabled{
+    opacity:0.6;
 }
 
 p{
-color:white;
+    color:#ddd;
+    font-size:14px;
+    margin-top:18px;
 }
-
 </style>
-
 </head>
 
 <body>
 
 <div class="box">
 
-<h2>Login</h2>
+    <h2>Login</h2>
 
-<input
-type="email"
-id="email"
-placeholder="Email"
-autocomplete="email"
->
+    <input
+        type="email"
+        id="email"
+        placeholder="Email"
+        autocomplete="email"
+    >
 
-<input
-type="password"
-id="password"
-placeholder="Password"
-autocomplete="current-password"
->
+    <input
+        type="password"
+        id="password"
+        placeholder="Password"
+        autocomplete="current-password"
+    >
 
-<button id="loginBtn">
-Login
-</button>
+    <button id="loginBtn">Login</button>
 
-<p>Don't have an account?</p>
+    <p>Don't have an account?</p>
 
-<button onclick="window.location.href='signup.html'">
-Sign Up
-</button>
+    <button onclick="window.location.href='signup.html'">
+        Sign Up
+    </button>
 
 </div>
 
-
 <script type="module">
 
-import {
-initializeApp
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 
 import {
-getAuth,
-signInWithEmailAndPassword,
-setPersistence,
-browserLocalPersistence
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+    getAuth,
+    signInWithEmailAndPassword,
+    setPersistence,
+    browserLocalPersistence
+}
+from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
+
+/* FIREBASE CONFIG */
 
 const firebaseConfig = {
 
-apiKey: "AIzaSyBL23qVtMr9EdV4qhdXB8DJ9xzWnKQfRU0",
+    apiKey: "AIzaSyBL23qVtMr9EdV4qhdXB8DJ9xzWnKQfRU0",
 
-authDomain: "zohaib-mining.firebaseapp.com",
+    authDomain: "zohaib-mining.firebaseapp.com",
 
-projectId: "zohaib-mining",
+    projectId: "zohaib-mining",
 
-storageBucket: "zohaib-mining.firebasestorage.app",
+    storageBucket: "zohaib-mining.firebasestorage.app",
 
-messagingSenderId: "349772987051",
+    messagingSenderId: "349772987051",
 
-appId: "1:349772987051:web:abab3ec726d95a74eb15ee"
+    appId: "1:349772987051:web:abab3ec726d95a74eb15ee"
 
 };
 
+
+/* START FIREBASE */
 
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
 
 
-const loginBtn = document.getElementById("loginBtn");
+/* LOGIN */
+
+document
+.getElementById("loginBtn")
+.addEventListener("click", async () => {
+
+    const email =
+        document
+        .getElementById("email")
+        .value
+        .trim()
+        .toLowerCase();
+
+    const password =
+        document
+        .getElementById("password")
+        .value;
 
 
-loginBtn.addEventListener("click", async () => {
+    if (!email || !password) {
 
-const email =
-document.getElementById("email").value.trim().toLowerCase();
+        alert("Please enter email and password!");
 
-const password =
-document.getElementById("password").value;
-
-
-if(!email || !password){
-
-alert("Please enter email and password!");
-
-return;
-
-}
+        return;
+    }
 
 
-loginBtn.disabled = true;
+    const button =
+        document.getElementById("loginBtn");
 
-loginBtn.innerText = "Logging in...";
+    button.disabled = true;
 
-
-try{
-
-await setPersistence(
-auth,
-browserLocalPersistence
-);
+    button.innerText = "Logging in...";
 
 
-const userCredential =
-await signInWithEmailAndPassword(
-auth,
-email,
-password
-);
+    try {
+
+        await setPersistence(
+            auth,
+            browserLocalPersistence
+        );
 
 
-const user =
-userCredential.user;
+        const userCredential =
+            await signInWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
 
 
-alert("Login Successful!");
+        const user = userCredential.user;
 
 
-/*
-ADMIN ACCOUNT
-*/
+        /*
+         * ADMIN EMAIL
+         */
 
-if(user.email.toLowerCase() === "zabbirajpoot46@gmail.com"){
+        if (
+            user.email &&
+            user.email.toLowerCase()
+            === "zabbirajpoot46@gmail.com"
+        ) {
 
-window.location.href = "admin.html";
+            alert("Admin Login Successful!");
 
-}
+            window.location.href = "admin.html";
 
+        } else {
 
-/*
-NORMAL USER
-*/
+            alert("Login Successful!");
 
-else{
+            window.location.href = "index.html";
 
-window.location.href = "index.html";
-
-}
+        }
 
 
-}catch(error){
+    } catch (error) {
 
-console.log(error);
+        console.log(error);
 
-alert(error.message);
+        alert(
+            "Login failed: " +
+            error.message
+        );
 
-loginBtn.disabled = false;
+        button.disabled = false;
 
-loginBtn.innerText = "Login";
+        button.innerText = "Login";
 
-}
+    }
 
 });
 
 </script>
 
 </body>
-
 </html>
