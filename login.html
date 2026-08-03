@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Login - Zohaib Mining</title>
 
 <style>
+
 body{
 margin:0;
 background:#1b102d;
@@ -15,6 +18,7 @@ justify-content:center;
 align-items:center;
 height:100vh;
 }
+
 .box{
 background:#2a1845;
 padding:30px;
@@ -22,9 +26,11 @@ border-radius:10px;
 width:320px;
 text-align:center;
 }
+
 h2{
 color:#b84dff;
 }
+
 input{
 width:100%;
 padding:12px;
@@ -33,6 +39,7 @@ border:none;
 border-radius:6px;
 box-sizing:border-box;
 }
+
 button{
 width:100%;
 padding:12px;
@@ -44,76 +51,176 @@ font-size:16px;
 cursor:pointer;
 margin-top:10px;
 }
+
+button:hover{
+background:#9d35df;
+}
+
+p{
+color:white;
+}
+
 </style>
+
 </head>
 
 <body>
 
 <div class="box">
+
 <h2>Login</h2>
 
-<input type="email" id="email" placeholder="Email">
-<input type="password" id="password" placeholder="Password">
+<input
+type="email"
+id="email"
+placeholder="Email"
+autocomplete="email"
+>
 
-<button id="loginBtn">Login</button>
+<input
+type="password"
+id="password"
+placeholder="Password"
+autocomplete="current-password"
+>
+
+<button id="loginBtn">
+Login
+</button>
 
 <p>Don't have an account?</p>
 
-<button onclick="window.location.href='signup.html'">Sign Up</button>
+<button onclick="window.location.href='signup.html'">
+Sign Up
+</button>
 
 </div>
 
+
 <script type="module">
+
 import {
-  initializeApp
+initializeApp
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 
+
 import {
-  getAuth,
-  signInWithEmailAndPassword,
-  setPersistence,
-  browserLocalPersistence
+getAuth,
+signInWithEmailAndPassword,
+setPersistence,
+browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
+
 const firebaseConfig = {
-  apiKey: "AIzaSyBL23qVtMr9EdV4qhdXB8DJ9xzWnKQfRU0",
-  authDomain: "zohaib-mining.firebaseapp.com",
-  projectId: "zohaib-mining",
-  storageBucket: "zohaib-mining.firebasestorage.app",
-  messagingSenderId: "349772987051",
-  appId: "1:349772987051:web:abab3ec726d95a74eb15ee"
+
+apiKey: "AIzaSyBL23qVtMr9EdV4qhdXB8DJ9xzWnKQfRU0",
+
+authDomain: "zohaib-mining.firebaseapp.com",
+
+projectId: "zohaib-mining",
+
+storageBucket: "zohaib-mining.firebasestorage.app",
+
+messagingSenderId: "349772987051",
+
+appId: "1:349772987051:web:abab3ec726d95a74eb15ee"
+
 };
 
+
 const app = initializeApp(firebaseConfig);
+
 const auth = getAuth(app);
-    document.getElementById("loginBtn").addEventListener("click", async () => {
 
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value;
 
-  if (!email || !password) {
-    alert("Please enter email and password!");
-    return;
-  }
+const loginBtn = document.getElementById("loginBtn");
 
-  try {
 
-    await setPersistence(auth, browserLocalPersistence);
+loginBtn.addEventListener("click", async () => {
 
-    await signInWithEmailAndPassword(auth, email, password);
+const email =
+document.getElementById("email").value.trim().toLowerCase();
 
-    alert("Login Successful!");
+const password =
+document.getElementById("password").value;
 
-    window.location.href = "admin.html";
 
-  } catch (error) {
+if(!email || !password){
 
-    alert(error.message);
+alert("Please enter email and password!");
 
-  }
+return;
+
+}
+
+
+loginBtn.disabled = true;
+
+loginBtn.innerText = "Logging in...";
+
+
+try{
+
+await setPersistence(
+auth,
+browserLocalPersistence
+);
+
+
+const userCredential =
+await signInWithEmailAndPassword(
+auth,
+email,
+password
+);
+
+
+const user =
+userCredential.user;
+
+
+alert("Login Successful!");
+
+
+/*
+ADMIN ACCOUNT
+*/
+
+if(user.email.toLowerCase() === "zabbirajpoot46@gmail.com"){
+
+window.location.href = "admin.html";
+
+}
+
+
+/*
+NORMAL USER
+*/
+
+else{
+
+window.location.href = "index.html";
+
+}
+
+
+}catch(error){
+
+console.log(error);
+
+alert(error.message);
+
+loginBtn.disabled = false;
+
+loginBtn.innerText = "Login";
+
+}
 
 });
-    </script>
+
+</script>
 
 </body>
+
 </html>
