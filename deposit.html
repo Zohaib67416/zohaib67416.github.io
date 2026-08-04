@@ -1,1 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo Deposit - Zohaib Mining</title>
 
+<style>
+*{
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    margin:0;
+    background:#1b102d;
+    color:white;
+}
+
+.header{
+    background:#2a1845;
+    padding:18px;
+    text-align:center;
+    font-size:23px;
+    font-weight:bold;
+}
+
+.card{
+    background:#2a1845;
+    margin:20px;
+    padding:20px;
+    border-radius:12px;
+}
+
+h2{
+    color:#d16bff;
+}
+
+.method{
+    display:flex;
+    gap:10px;
+}
+
+.method button{
+    flex:1;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:0;
+    border-radius:7px;
+    background:#b84dff;
+    color:white;
+    font-size:16px;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border:0;
+    border-radius:7px;
+}
+
+.account{
+    background:#392052;
+    padding:15px;
+    border-radius:8px;
+    margin-top:15px;
+}
+
+.preview{
+    width:100%;
+    max-height:300px;
+    object-fit:contain;
+    margin-top:15px;
+    border-radius:8px;
+    display:none;
+}
+
+.back{
+    background:#444;
+}
+
+.note{
+    color:#ffd66b;
+    font-size:13px;
+    margin-top:15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    Demo Deposit
+</div>
+
+<div class="card">
+
+<h2>💳 Select Method</h2>
+
+<div class="method">
+
+<button id="jazzBtn">
+    💚 JazzCash
+</button>
+
+<button id="easyBtn">
+    💚 EasyPaisa
+</button>
+
+</div>
+
+<div class="account">
+
+<b id="methodName">
+    Select a method
+</b>
+
+<p id="accountName">
+    Demo Account
+</p>
+
+<p id="demoNumber">
+    03XXXXXXXXX
+</p>
+
+</div>
+
+<label>Demo Amount</label>
+
+<input
+    type="number"
+    id="amount"
+    placeholder="Enter amount"
+    min="1"
+>
+
+<label>📷 Screenshot</label>
+
+<input
+    type="file"
+    id="screenshot"
+    accept="image/*"
+>
+
+<img
+    id="preview"
+    class="preview"
+>
+
+<button id="submitBtn">
+    ✅ Submit Demo Request
+</button>
+
+<button
+    class="back"
+    onclick="window.location.href='index.html'"
+>
+    ← Back
+</button>
+
+<p class="note">
+Demo only — no real payment is made.
+</p>
+
+</div>
+
+
+<script type="module">
+
+import {
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+
+import {
+    getAuth,
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+
+const firebaseConfig = {
+
+    apiKey: "AIzaSyBL23qVtMr9EdV4qhdXB8DJ9xzWnKQfRU0",
+
+    authDomain: "zohaib-mining.firebaseapp.com",
+
+    projectId: "zohaib-mining",
+
+    storageBucket: "zohaib-mining.firebasestorage.app",
+
+    messagingSenderId: "349772987051",
+
+    appId: "1:349772987051:web:abab3ec726d95a74eb15ee"
+
+};
+
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const db = getFirestore(app);
+
+let selectedMethod = "";
+
+
+/* LOGIN CHECK */
+
+onAuthStateChanged(auth, (user) => {
+
+    if(!user){
+
+        alert("Please login first!");
+
+        window.location.href = "login.html";
+
+    }
+
+});
+
+
+/* METHOD */
+
+document.getElementById("jazzBtn").onclick = () => {
+
+    selectedMethod = "JazzCash";
+
+    document.getElementById("methodName").innerText =
+        "💚 JazzCash Demo";
+
+    document.getElementById("accountName").innerText =
+        "Account Name: Demo Account";
+
+    document.getElementById("demoNumber").innerText =
+        "03XXXXXXXXX";
+
+};
+
+
+document.getElementById("easyBtn").onclick = () => {
+
+    selectedMethod = "EasyPaisa";
+
+    document.getElementById("methodName").innerText =
+        "💚 EasyPaisa Demo";
+
+    document.getElementById("accountName").innerText =
+        "Account Name: Demo Account";
+
+    document.getElementById("demoNumber").innerText =
+        "03XXXXXXXXX";
+
+};
+
+
+/* SCREENSHOT PREVIEW */
+
+document.getElementById("screenshot").onchange =
+function(){
+
+    const file = this.files[0];
+
+    if(!file){
+        return;
+    }
+
+    const preview =
+        document.getElementById("preview");
+
+    preview.src =
+        URL.createObjectURL(file);
+
+    preview.style.display = "block";
+
+};
+
+
+/* SUBMIT */
+
+document.getElementById("submitBtn").onclick =
+async function(){
+
+    const user = auth.currentUser;
+
+    if(!user){
+
+        alert("Please login first!");
+
+        return;
+    }
+
+
+    const amount =
+        Number(
+            document.getElementById("amount").value
+        );
+
+
+    if(!selectedMethod){
+
+        alert("Select JazzCash or EasyPaisa.");
+
+        return;
+    }
+
+
+    if(!amount || amount <= 0){
+
+        alert("Enter a valid demo amount.");
+
+        return;
+    }
+
+
+    const screenshot =
+        document.getElementById("screenshot").files[0];
+
+
+    if(!screenshot){
+
+        alert("Please select a screenshot.");
+
+        return;
+    }
+
+
+    const button =
+        document.getElementById("submitBtn");
+
+    button.disabled = true;
+
+    button.innerText = "Submitting...";
+
+
+    try{
+
+        await addDoc(
+            collection(db, "deposits"),
+            {
+
+                uid: user.uid,
+
+                email: user.email,
+
+                amount: amount,
+
+                method: selectedMethod,
+
+                status: "Pending",
+
+                createdAt: serverTimestamp()
+
+            }
+        );
+
+
+        alert(
+            "Demo request submitted!\nStatus: Pending"
+        );
+
+
+        document.getElementById("amount").value = "";
+
+        document.getElementById("screenshot").value = "";
+
+        document.getElementById("preview").style.display =
+            "none";
+
+
+    }catch(error){
+
+        console.log(error);
+
+        alert("Error: " + error.message);
+
+
+    }finally{
+
+        button.disabled = false;
+
+        button.innerText =
+            "✅ Submit Demo Request";
+
+    }
+
+};
+
+</script>
+
+</body>
+</html>
