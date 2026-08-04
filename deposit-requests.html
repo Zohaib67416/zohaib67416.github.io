@@ -1,9 +1,10 @@
-i<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Deposit Requests</title>
+
+<title>Demo Deposit Requests</title>
 
 <style>
 body{
@@ -13,91 +14,289 @@ body{
     color:white;
     padding:20px;
 }
+
 h2{
     text-align:center;
 }
+
 .card{
     background:#2a1845;
-    padding:15px;
+    padding:18px;
     margin:15px 0;
     border-radius:10px;
 }
+
+.status{
+    font-weight:bold;
+}
+
 button{
     padding:10px 15px;
     border:none;
     border-radius:6px;
-    background:#b84dff;
     color:white;
     cursor:pointer;
+    margin:5px 5px 0 0;
+}
+
+.approve{
+    background:#28a745;
+}
+
+.reject{
+    background:#dc3545;
+}
+
+.back{
+    background:#555;
+    width:100%;
+    margin-top:15px;
+}
+
+button:disabled{
+    opacity:.5;
 }
 </style>
 </head>
 
 <body>
 
-<h2>💳 Deposit Requests</h2>
+<h2>💳 Demo Deposit Requests</h2>
 
-<div id="list">Loading...</div>
+<div id="list">
+    Loading...
+</div>
+
+<button
+    class="back"
+    onclick="window.location.href='admin.html'"
+>
+    ← Back to Admin Panel
+</button>
+
 
 <script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+import {
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+
+import {
+    getAuth,
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+import {
+    getFirestore,
+    collection,
+    getDocs,
+    updateDoc,
+    doc
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBL23qVtMr9EdV4qhdXB8DJ9xzWnKQfRU0",
-  authDomain: "zohaib-mining.firebaseapp.com",
-  projectId: "zohaib-mining",
-  storageBucket: "zohaib-mining.firebasestorage.app",
-  messagingSenderId: "349772987051",
-  appId: "1:349772987051:web:abab3ec726d95a74eb15ee"
+
+    apiKey: "AIzaSyBL23qVtMr9EdV4qhdXB8DJ9xzWnKQfRU0",
+
+    authDomain: "zohaib-mining.firebaseapp.com",
+
+    projectId: "zohaib-mining",
+
+    storageBucket: "zohaib-mining.firebasestorage.app",
+
+    messagingSenderId: "349772987051",
+
+    appId: "1:349772987051:web:abab3ec726d95a74eb15ee"
+
 };
 
+
 const app = initializeApp(firebaseConfig);
+
 const auth = getAuth(app);
+
 const db = getFirestore(app);
 
-onAuthStateChanged(auth, async (user) => {
 
-  if (!user) {
-    alert("Please login first!");
-    window.location.href = "login.html";
-    return;
-  }
+/* LOAD REQUESTS */
 
-  try {
+async function loadRequests(){
 
-    const snapshot = await getDocs(collection(db,"deposits"));
+    const list =
+        document.getElementById("list");
 
-    let html = "";
+    list.innerHTML = "Loading...";
 
-    snapshot.forEach((doc)=>{
 
-      const data = doc.data();
+    try{
 
-      html += `
-      <div class="card">
-      <b>Email:</b> ${data.email || "Unknown"}<br><br>
-      <b>Method:</b> ${data.method || "Unknown"}<br><br>
-      <b>Status:</b> ${data.status || "Pending"}
-      </div>
-      `;
+        const snapshot =
+            await getDocs(
+                collection(db,"deposits")
+            );
 
-    });
 
-    if(html===""){
-      html="<h3>No Deposit Requests</h3>";
+        let html = "";
+
+
+        snapshot.forEach((requestDoc)=>{
+
+            const data =
+                requestDoc.data();
+
+            const id =
+                requestDoc.id;
+
+
+            html += `
+
+            <div class="card">
+
+                <b>Email:</b>
+                ${data.email || "Unknown"}
+
+                <br><br>
+
+                <b>Amount:</b>
+                ${data.amount || 0}
+
+                <br><br>
+
+                <b>Method:</b>
+                ${data.method || "Unknown"}
+
+                <br><br>
+
+                <b>Status:</b>
+
+                <span class="status">
+                    ${data.status || "Pending"}
+                </span>
+
+                <br><br>
+
+                <button
+                    class="approve"
+                    onclick="updateStatus('${id}','Approved')"
+                    ${data.status === "Approved" ? "disabled" : ""}
+                >
+                    ✅ Demo Approve
+                </button>
+
+
+                <button
+                    class="reject"
+                    onclick="updateStatus('${id}','Rejected')"
+                    ${data.status === "Rejected" ? "disabled" : ""}
+                >
+                    ❌ Demo Reject
+                </button>
+
+            </div>
+
+            `;
+
+        });
+
+
+        if(html === ""){
+
+            html =
+                "<h3>No Deposit Requests</h3>";
+
+        }
+
+
+        list.innerHTML = html;
+
+
+    }catch(error){
+
+        console.log(error);
+
+        list.innerHTML =
+            "<h3>Error: " +
+            error.message +
+            "</h3>";
+
     }
 
-    document.getElementById("list").innerHTML=html;
+}
 
-  } catch(e){
 
-    document.getElementById("list").innerHTML="<h3>"+e.message+"</h3>";
-    console.log(e);
+/* UPDATE DEMO STATUS */
 
-  }
+window.updateStatus =
+async function(requestId,status){
+
+    try{
+
+        await updateDoc(
+            doc(db,"deposits",requestId),
+            {
+                status:status
+            }
+        );
+
+
+        alert(
+            "Demo request " +
+            status +
+            " successfully!"
+        );
+
+
+        loadRequests();
+
+
+    }catch(error){
+
+        console.log(error);
+
+        alert(
+            "Error: " +
+            error.message
+        );
+
+    }
+
+};
+
+
+/* ADMIN LOGIN CHECK */
+
+onAuthStateChanged(auth,(user)=>{
+
+    if(!user){
+
+        alert("Please login first!");
+
+        window.location.href =
+            "login.html";
+
+        return;
+
+    }
+
+
+    if(
+        user.email.toLowerCase()
+        !==
+        "zabbirajpoot46@gmail.com"
+    ){
+
+        alert("Admin access only!");
+
+        window.location.href =
+            "index.html";
+
+        return;
+
+    }
+
+
+    loadRequests();
 
 });
 
